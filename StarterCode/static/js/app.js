@@ -13,7 +13,7 @@ function dropdown() {
       dropdownMenu.append("option").text(id).property("value", id);
     });
     demo_table(id_names[0]);
-    chart(id_names[0])
+    chart(id_names[0]);
   });
 }
 dropdown();
@@ -48,7 +48,10 @@ function chart(filter_id) {
     var sample_values = result.sample_values;
 
     //Get the top 10 otu_ids = y values
-    var top_10 = otu_ids.slice(0, 10).map(otuID => `OTU ${otuID}`).reverse();
+    var top_10 = otu_ids
+      .slice(0, 10)
+      .map((otuID) => `OTU ${otuID}`)
+      .reverse();
 
     var data = [
       {
@@ -63,37 +66,34 @@ function chart(filter_id) {
     //Create layout for bar chart
     var barLayout = {
       title: "Top 10 OTUs Found",
-      margin: { t: 30, l: 150 }
+      margin: { t: 30, l: 150 },
     };
-      
 
-    // Use Plotly to plot the data with the layout.
+// Use Plotly to plot the data with the layout.
     Plotly.newPlot("bar", data, barLayout);
 
-    //Create bubble chart
-    //Extract data for the x & y values of the bar chart
-    var result = samples_data[0];
-    var otu_ids = result.otu_ids;
-    var otu_labels = result.otu_labels;
-    var sample_values = result.sample_values;
-
-    //Create trace for bubble chart
+//Create bubble chart
+//Create trace for bubble chart
     var trace1 = {
       x: otu_ids,
       y: sample_values,
+      text: otu_labels, 
       mode: "markers",
       marker: {
-        size: [40, 60, 80, 100],
+        size: sample_values,
+        color: otu_ids,
+        colorscale: "Earth",
       },
     };
 
     var data = [trace1];
 
     var layout = {
-      title: "Marker Size",
-      showlegend: false,
-      height: 600,
-      width: 600,
+      title: "Samples by OTU ID",
+      margin: {t:0},
+      hovermode: "closest",
+      xaxis: { title: "OTU ID" },
+      margin: { t: 30},
     };
 
     Plotly.newPlot("bubble", data, layout);
